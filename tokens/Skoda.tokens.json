@@ -93,12 +93,12 @@
         "$value": {
           "colorSpace": "srgb",
           "components": [
-            0.10196078568696976,
-            0.2235294133424759,
-            0.18431372940540314
+            0,
+            0,
+            0
           ],
           "alpha": 1,
-          "hex": "#1A392F"
+          "hex": "#000000"
         },
         "$extensions": {
           "com.figma.variableId": "VariableID:12:2",
