@@ -2,13 +2,10 @@
 
 Figma variables → GitHub → [Style Dictionary](https://styledictionary.com) → CSS variables + Liferay Style Book tokens.
 
-```
-Figma "Export variables"          GitHub Actions (on every upload)                 Developers
-─────────────────────────   →   ─────────────────────────────────────────   →   ─────────────────────────────
-tokens/<Brand>.tokens.json       build → test → compare → publish                 npm package (GitHub Packages)
-                                                                                 GitHub Release: <brand>.css
-                                                                                 Liferay frontend-token-definition.json
-```
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/pipeline-dark.svg">
+  <img alt="Brand token files exported from Figma variables are uploaded to tokens/ in the GitHub repo. GitHub Actions runs Style Dictionary (build, test, compare) and publishes skoda.css with CSS variables, frontend-token-definition.json for Liferay Style Books, and the @bertpv/design-tokens package to npm and GitHub Releases." src="docs/pipeline-light.svg" width="880">
+</picture>
 
 ## For designers: update the tokens
 
