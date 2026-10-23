@@ -1724,6 +1724,19 @@
           "ALL_SCOPES"
         ]
       }
+    },
+    "section": {
+      "background-color-primary": {
+        "$type": "color",
+        "$value": "{color.primary.400}",
+        "$extensions": {
+          "com.figma.variableId": "VariableID:4862:13",
+          "com.figma.hiddenFromPublishing": true,
+          "com.figma.scopes": [
+            "ALL_SCOPES"
+          ]
+        }
+      }
     }
   },
   "tooltip": {
