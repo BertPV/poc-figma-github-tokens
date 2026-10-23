@@ -6,7 +6,15 @@ import { buildBrand, brandFromFile, SUFFIX } from './config/build-brand.mjs';
 
 const TOKENS_DIR = 'tokens';
 
-const files = (await readdir(TOKENS_DIR)).filter((f) => f.endsWith(SUFFIX)).sort();
+const entries = await readdir(TOKENS_DIR, { withFileTypes: true });
+const files = entries.filter((e) => e.isFile() && e.name.endsWith(SUFFIX)).map((e) => e.name).sort();
+
+// tokens/ holds Figma exports and the shared/ folder. Anything else is probably
+// a build output that was put back by mistake, so say so rather than ignore it.
+const stray = entries.filter((e) => e.isFile() && !e.name.endsWith(SUFFIX) && !e.name.startsWith('.'));
+if (stray.length) {
+  console.warn(`Ignored in ${TOKENS_DIR}/ (not a Figma export): ${stray.map((e) => e.name).join(', ')}`);
+}
 if (files.length === 0) {
   console.error(`No *${SUFFIX} files found in ${TOKENS_DIR}/`);
   process.exit(1);
