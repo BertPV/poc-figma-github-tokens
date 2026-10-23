@@ -15,9 +15,17 @@ export const SHARED_SOURCE = 'tokens/shared/*.json';
 registerTransforms(StyleDictionary);
 StyleDictionary.registerFormat(liferayTokensFormat);
 
-/** "Skoda.tokens.json" -> "skoda", "VW Commercial.tokens.json" -> "vw-commercial" */
+/**
+ * "Skoda.tokens.json" -> "skoda", "P&V Group.tokens.json" -> "pv-group".
+ * Punctuation is dropped rather than kept, because the brand name ends up in
+ * file names and in release download URLs.
+ */
 export function brandFromFile(file) {
-  return basename(file, SUFFIX).trim().toLowerCase().replace(/\s+/g, '-');
+  return basename(file, SUFFIX)
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]+/g, '')
+    .trim()
+    .replace(/[\s-]+/g, '-');
 }
 
 /** Builds one Figma mode export into <outDir>/css/<brand>.css and <outDir>/liferay/<brand>/. */
