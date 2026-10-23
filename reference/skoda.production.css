@@ -150,4 +150,35 @@
     --type-heading-font-family: "SKODA Next";
     --type-heading-font-weight: 700;
     --type-base-font-family: "SKODA Next";
+
+    /*-- typography + spacing scale (Figma styles, not variables) --*/
+    --pvgr-font-size-xs: 0.75rem;
+    --pvgr-font-size-sm: 0.875rem;
+    --pvgr-font-size-base: 1rem;
+    --pvgr-font-size-md: 1.125rem;
+    --pvgr-font-size-lg: 1.25rem;
+    --pvgr-h1-font-size: 1.875rem;
+    --pvgr-h1-font-size-mobile: 1.25rem;
+    --pvgr-h2-font-size: 1.25rem;
+    --pvgr-h2-font-size-mobile: 1rem;
+    --pvgr-h3-font-size: 1rem;
+    --pvgr-h3-font-size-mobile: 0.875rem;
+    --pvgr-h4-font-size: 0.875rem;
+    --pvgr-h4-font-size-mobile: 0.75rem;
+    --pvgr-h5-font-size: 0.75rem;
+    --pvgr-h5-font-size-mobile: 0.75rem;
+    --pvgr-display-1: 2.625rem;
+    --pvgr-display-1-mobile: 2.25rem;
+    --pvgr-display-2: 2.25rem;
+    --pvgr-display-2-mobile: 1.875rem;
+    --pvgr-spacer-1: 0.25rem;
+    --pvgr-spacer-2: 0.5rem;
+    --pvgr-spacer-3: 1rem;
+    --pvgr-spacer-4: 1.5rem;
+    --pvgr-spacer-5: 2rem;
+    --pvgr-spacer-6: 3rem;
+    --pvgr-spacer-7: 4.5rem;
+    --pvgr-spacer-8: 6rem;
+    --pvgr-spacer-9: 7.5rem;
+    --pvgr-spacer-10: 10rem;
 }

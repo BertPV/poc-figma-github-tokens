@@ -19,7 +19,7 @@ function editorTypeFor(token) {
   const type = token.$type ?? token.type;
   const value = String(token.$value ?? token.value);
   if (type === 'color') return 'ColorPicker';
-  if (type === 'number' && value.endsWith('px')) return 'Length';
+  if (/^-?[\d.]+(px|rem|em)$/.test(value)) return 'Length';
   return undefined;
 }
 
