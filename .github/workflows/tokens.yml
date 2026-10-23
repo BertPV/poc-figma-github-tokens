@@ -67,15 +67,11 @@ jobs:
         run: |
           mkdir -p release
           cp dist/css/*.css release/
-          for dir in dist/liferay/*/; do
-            brand="$(basename "$dir")"
-            cp "$dir/frontend-token-definition.json" "release/${brand}.frontend-token-definition.json"
-          done
           {
             echo "brands<<EOF"
             for css in dist/css/*.css; do
               brand="$(basename "$css" .css)"
-              echo "| ${brand} | [${brand}.css](https://github.com/${{ github.repository }}/releases/latest/download/${brand}.css) | [${brand}.frontend-token-definition.json](https://github.com/${{ github.repository }}/releases/latest/download/${brand}.frontend-token-definition.json) |"
+              echo "| ${brand} | [${brand}.css](https://github.com/${{ github.repository }}/releases/latest/download/${brand}.css) |"
             done
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
@@ -92,8 +88,8 @@ jobs:
 
             **Direct download (links always point to the latest release):**
 
-            | Brand | CSS | Liferay Style Book |
-            |---|---|---|
+            | Brand | CSS |
+            |---|---|
             ${{ steps.release.outputs.brands }}
 
             See the workflow run summary for the comparison with the production baseline.

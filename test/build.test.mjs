@@ -11,19 +11,16 @@ import { buildBrand, brandFromFile } from '../config/build-brand.mjs';
 
 const cssNames = (css) =>
   [...css.replace(/\/\*[\s\S]*?\*\//g, '').matchAll(/(--[\w-]+)\s*:/g)].map((m) => m[1]);
-const liferayTokens = (json) =>
-  json.frontendTokenCategories.flatMap((c) => c.frontendTokenSets.flatMap((s) => s.frontendTokens));
 const exists = (p) => access(p).then(() => true, () => false);
 
 describe('conversion rules (fixture)', () => {
-  let css, liferay;
+  let css;
 
   before(async () => {
     const out = await mkdtemp(join(tmpdir(), 'tokens-'));
     const brand = await buildBrand('test/fixtures/Test Brand.tokens.json', { outDir: out, verbosity: 'silent' });
     assert.equal(brand, 'test-brand');
     css = await readFile(join(out, 'css/test-brand.css'), 'utf8');
-    liferay = JSON.parse(await readFile(join(out, 'liferay/test-brand/frontend-token-definition.json'), 'utf8'));
   });
 
   test('CSS is scoped to :root', () => assert.match(css, /^:root \{$/m));
@@ -43,21 +40,6 @@ describe('conversion rules (fixture)', () => {
     test(`CSS contains ${line}`, () => assert.ok(css.includes(line), `missing: ${line}\n\n${css}`));
   }
 
-  test('Liferay token definition matches the CSS', () => {
-    const tokens = liferayTokens(liferay);
-    assert.deepEqual(tokens.map((t) => `--${t.mappings[0].value}`).sort(), cssNames(css).sort());
-    assert.deepEqual(tokens.find((t) => t.name === 'colorPrimary500'), {
-      name: 'colorPrimary500',
-      label: 'color-primary-500',
-      defaultValue: '#1A392F',
-      type: 'String',
-      editorType: 'ColorPicker',
-      mappings: [{ type: 'cssVariable', value: 'color-primary-500' }],
-    });
-    assert.equal(tokens.find((t) => t.name === 'typeLinkColor').defaultValue, '#1A392F'); // aliases resolved
-    assert.equal(tokens.find((t) => t.name === 'tabsBorderRadius').editorType, 'Length');
-  });
-
   test('a broken reference fails the build', async () => {
     const dir = await mkdtemp(join(tmpdir(), 'tokens-'));
     const src = join(dir, 'Broken.tokens.json');
@@ -75,14 +57,10 @@ describe('built brands (dist/)', async () => {
   for (const file of files) {
     const brand = brandFromFile(file);
 
-    test(`${brand}: CSS and Liferay output contain the same tokens`, async () => {
+    test(`${brand}: CSS is scoped to :root and has tokens`, async () => {
       const css = await readFile(`dist/css/${brand}.css`, 'utf8');
-      const liferay = JSON.parse(await readFile(`dist/liferay/${brand}/frontend-token-definition.json`, 'utf8'));
       assert.match(css, /^:root \{$/m);
-      assert.deepEqual(
-        liferayTokens(liferay).map((t) => `--${t.mappings[0].value}`).sort(),
-        cssNames(css).sort(),
-      );
+      assert.ok(cssNames(css).length > 0);
     });
 
     // Guard for developers: a variable that production uses must not silently disappear.

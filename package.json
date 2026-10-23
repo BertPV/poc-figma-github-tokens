@@ -7,8 +7,7 @@
     "dist"
   ],
   "exports": {
-    "./css/*": "./dist/css/*",
-    "./liferay/*": "./dist/liferay/*"
+    "./css/*": "./dist/css/*"
   },
   "scripts": {
     "build": "node build.mjs",

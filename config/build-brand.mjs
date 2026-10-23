@@ -1,7 +1,6 @@
 import { basename } from 'node:path';
 import StyleDictionary from 'style-dictionary';
 import { registerTransforms } from './transforms.mjs';
-import { liferayTokensFormat } from './formats/liferay-tokens.mjs';
 import { platformsFor } from './platforms.mjs';
 
 export const SUFFIX = '.tokens.json';
@@ -13,7 +12,6 @@ export const SUFFIX = '.tokens.json';
 export const SHARED_SOURCE = 'tokens/shared/*.json';
 
 registerTransforms(StyleDictionary);
-StyleDictionary.registerFormat(liferayTokensFormat);
 
 /**
  * "Skoda.tokens.json" -> "skoda", "P&V Group.tokens.json" -> "pv-group".
@@ -28,7 +26,7 @@ export function brandFromFile(file) {
     .replace(/[\s-]+/g, '-');
 }
 
-/** Builds one Figma mode export into <outDir>/css/<brand>.css and <outDir>/liferay/<brand>/. */
+/** Builds one Figma mode export into <outDir>/css/<brand>.css. */
 export async function buildBrand(sourcePath, { outDir = 'dist', verbosity = 'verbose', shared = true } = {}) {
   const brand = brandFromFile(sourcePath);
   const sd = new StyleDictionary({

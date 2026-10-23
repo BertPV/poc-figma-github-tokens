@@ -15,15 +15,5 @@ export function platformsFor(brand, outDir = 'dist') {
         },
       ],
     },
-    liferay: {
-      transformGroup: 'figma/css',
-      buildPath: `${outDir}/liferay/${brand}/`,
-      files: [
-        {
-          destination: 'frontend-token-definition.json',
-          format: 'liferay/frontend-token-definition',
-        },
-      ],
-    },
   };
 }

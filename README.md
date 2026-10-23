@@ -1,10 +1,10 @@
 # Design tokens (multi-brand)
 
-Figma variables → GitHub → [Style Dictionary](https://styledictionary.com) → CSS variables + Liferay Style Book tokens.
+Figma variables → GitHub → [Style Dictionary](https://styledictionary.com) → CSS custom properties.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/pipeline-dark.svg">
-  <img alt="Brand token files exported from Figma variables are uploaded to tokens/ in the GitHub repo. GitHub Actions runs Style Dictionary (build, test, compare) and publishes skoda.css with CSS variables, frontend-token-definition.json for Liferay Style Books, and the @bertpv/design-tokens package to npm and GitHub Releases." src="docs/pipeline-light.svg" width="880">
+  <img alt="Brand token files exported from Figma variables are uploaded to tokens/ in the GitHub repo. GitHub Actions runs Style Dictionary (build, test, compare) and publishes a CSS custom-properties file per brand to npm and GitHub Releases." src="docs/pipeline-light.svg" width="904">
 </picture>
 
 ## For designers: update the tokens
@@ -32,7 +32,6 @@ Each build creates a [GitHub Release](../../releases) that contains:
 | File | Use |
 |---|---|
 | `<brand>.css` | Drop-in replacement for the hand-written `:root { --… }` token file |
-| `<brand>.frontend-token-definition.json` | Liferay Style Books (see below) |
 
 This link always points to the newest build (public repos only):
 `https://github.com/<owner>/<repo>/releases/latest/download/<brand>.css`
@@ -57,30 +56,12 @@ This link always points to the newest build (public repos only):
    @import '@<owner>/design-tokens/css/skoda.css';
    ```
 
-   One package contains every brand: `css/<brand>.css` and `liferay/<brand>/frontend-token-definition.json`.
+   One package contains every brand as `css/<brand>.css`.
    All brands share the same variable names, so a theme switches brand by importing a different file.
 
 ## Liferay
 
-### Now: replace the token CSS
-The theme currently defines tokens in its own CSS/SCSS file. Replace that file with the generated `<brand>.css`, either copied from a Release or imported from the npm package in the theme build. The variable names are identical, so no component CSS has to change.
-
-### Next step: Style Books
-`frontend-token-definition.json` turns every token into an editable field under **Design → Style Books**, with the Figma values as defaults. Colors use a color picker and pixel values use a length editor.
-
-- **Theme CSS client extension** (DXP 2024.Q2+ / GA120+), in `client-extension.yaml`:
-  ```yaml
-  skoda-theme-css:          # one client extension per brand
-    type: themeCSS
-    name: Skoda Theme CSS
-    clayURL: css/clay.css
-    mainURL: css/main.css
-    frontendTokenDefinitionJSON: src/frontend-token-definition.json
-  ```
-- **Classic theme:** place the file at `src/WEB-INF/frontend-token-definition.json`.
-
-Style Books write the chosen values as CSS variables, so the theme CSS must use `var(--…)` everywhere. It already does.
-Docs: [Frontend token definitions](https://learn.liferay.com/w/dxp/sites/site-appearance/style-books/developer-guide/frontend-token-definitions) · [Theme CSS client extension](https://learn.liferay.com/w/dxp/development/customizing-liferays-look-and-feel/using-a-theme-css-client-extension/theme-css-yaml-configuration-reference)
+The theme defines its tokens in its own CSS/SCSS file. Replace that file with the generated `<brand>.css`, either downloaded from a Release or imported from the npm package in the theme build. The variable names are identical, so no component CSS has to change.
 
 ## How the conversion works
 
@@ -92,7 +73,8 @@ Docs: [Frontend token definitions](https://learn.liferay.com/w/dxp/sites/site-ap
 | String `Skoda` | `"Skoda"` | `figma/quote` |
 | Group `header nav` | `--headernav-…` | `figma/kebab` |
 
-Every `tokens/*.tokens.json` is built separately: `tokens/Skoda.tokens.json` becomes `dist/css/skoda.css` and `dist/liferay/skoda/…`.
+Every `tokens/*.tokens.json` is built separately: `tokens/Skoda.tokens.json` becomes `dist/css/skoda.css`.
+`tokens/shared/` holds tokens that are Figma *styles* rather than variables (the `--pvgr-…` type scale and spacers); they are merged into every brand, so a new export cannot wipe them.
 The shared build logic is in `config/build-brand.mjs`.
 To add an output format such as SCSS or JS, add a platform in `config/platforms.mjs`.
 
@@ -108,7 +90,6 @@ npm run compare   # diff each brand against reference/<brand>.production.css
 ```
 
 **Tests** check the conversion rules against a fixed file (`test/fixtures/`), so a designer's value changes never break them.
-For every real brand, they check that the CSS and Liferay files match.
 If `reference/<brand>.production.css` exists, they also check that no production variable has disappeared. When a variable is removed on purpose, remove it from that reference file too.
 
 Versions are set automatically in CI as `1.0.<run number>`.
